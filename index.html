@@ -69,43 +69,36 @@
 <script>
   let nextLevel = 50;
 
-  function rollDice20() {
-    return Math.floor(Math.random() * 20) + 1;
+  /* O "= 6" indica que o valor padrão (se não passado) é de 6. */
+  function rollDice(dice = 6) {
+    return Math.floor(Math.random() * dice) + 1;
   }
 
-  function rollDice10() {
-    return Math.floor(Math.random() * 10) + 1;
-  }
+  function update(player) {
+    player_hp.innerHTML = player.hp;
+    player_mp.innerHTML = player.mp;
+    player_str.innerHTML = player.str;
+    player_dex.innerHTML = player.dex;
+    player_int.innerHTML = player.int;
 
-  function rollDice6() {
-    return Math.floor(Math.random() * 6) + 1;
-  }
-
-  function update(p) {
-    player_hp.innerHTML = p.hp;
-    player_mp.innerHTML = p.mp;
-    player_str.innerHTML = p.str;
-    player_dex.innerHTML = p.dex;
-    player_int.innerHTML = p.int;
-
-    player_lvl.innerHTML = p.lvl;
-    player_exp.innerHTML = p.exp;
+    player_lvl.innerHTML = player.lvl;
+    player_exp.innerHTML = player.exp;
     nxt_level.innerHTML = nextLevel;
 
-    player_pot.innerHTML = p.potion;
+    player_pot.innerHTML = player.potion;
 
-    player_weapon.innerHTML = p.weapon.name;
-    str_mult.innerHTML = p.weapon.scalingStr;
-    dex_mult.innerHTML = p.weapon.scalingDex;
-    int_mult.innerHTML = p.weapon.scalingInt;
+    player_weapon.innerHTML = player.weapon.name;
+    str_mult.innerHTML = player.weapon.scalingStr;
+    dex_mult.innerHTML = player.weapon.scalingDex;
+    int_mult.innerHTML = player.weapon.scalingInt;
 
-    enemy_name.innerHTML = p.room.enemy.name;
-    enemy_hp.innerHTML = p.room.enemy.hp;
-    enemy_lvl.innerHTML = p.room.enemy.lvl;
+    enemy_name.innerHTML = player.room.enemy.name;
+    enemy_hp.innerHTML = player.room.enemy.hp;
+    enemy_lvl.innerHTML = player.room.enemy.lvl;
 
-    room_num.innerHTML = p.room.num;
+    room_num.innerHTML = player.room.num;
 
-    p.room.enemy.frame();
+    player.room.enemy.frame();
   }
 
   function strUp(p) {
@@ -169,7 +162,7 @@
   }
 
   function potionDrop() {
-    let d10 = rollDice10();
+    let d10 = rollDice(10);
 
     if (d10 >= 7) {
       player.potion++;
@@ -193,8 +186,8 @@
 
   function enemyTurn(p, e) {
     if (e.hp > 0) {
-      let d20 = rollDice20();
-      let d6 = rollDice6();
+      let d20 = rollDice(20);
+      let d6 = rollDice(6);
 
       let enemyDmg = e.lvl * d6 + e.damage;
 
@@ -478,8 +471,8 @@
     room: "",
     attack: function () {
       if (this.room.isThereEnemy) {
-        let d6 = rollDice6();
-        let d20 = rollDice20();
+        let d6 = rollDice(6);
+        let d20 = rollDice(20);
 
         let playerStatusCalc =
           this.weapon.scalingStr * this.str +
@@ -510,7 +503,7 @@
     cast: function () {
       if (this.room.isThereEnemy) {
         if (this.mp >= this.skill.cost) {
-          let d10 = rollDice10();
+          let d10 = rollDice(10);
           let skillDmg = this.skill.dmg + d10;
 
           this.room.enemy.hp -= skillDmg;
